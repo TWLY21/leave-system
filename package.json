@@ -1,0 +1,30 @@
+{
+  "name": "leave-management-system",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm --workspace backend run dev",
+    "dev:frontend": "npm --workspace frontend run dev",
+    "build": "npm --workspace frontend run build",
+    "lint": "eslint .",
+    "audit:prod": "npm audit --omit=dev",
+    "test:api": "playwright test -c playwright.api.config.js",
+    "test:e2e": "playwright test -c playwright.e2e.config.js",
+    "test": "npm run test:api && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@playwright/test": "^1.54.2",
+    "eslint": "^9.23.0",
+    "eslint-plugin-vue": "^10.0.0",
+    "globals": "^16.0.0",
+    "vue-eslint-parser": "^10.1.1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

@@ -1,0 +1,56 @@
+# Continuous integration pipeline for the Leave Management System.
+# This workflow runs on every push and pull request. It installs dependencies,
+# lints the codebase, builds the frontend, installs Playwright browsers, runs
+# backend API tests, runs browser end-to-end tests, and surfaces test artifacts.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint codebase
+        run: npm run lint
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run API tests
+        run: npm run test:api
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
+      - name: Audit production dependencies
+        run: npm run audit:prod
+        continue-on-error: true
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
