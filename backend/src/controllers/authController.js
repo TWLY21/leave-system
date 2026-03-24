@@ -48,17 +48,29 @@ async function register(req, res) {
 // Handles POST /api/auth/login by validating credentials and issuing a JWT.
 async function login(req, res) {
   const { username, password } = req.body;
-  // Reads the user record and stored password hash from the active database.
+
   const user = await findUserByUsername(username);
 
-  if (!user || !bcrypt.compareSync(password, user.password)) {
+  // Safety check (prevents undefined crash)
+  if (!user) {
     throw new HttpError(401, 'Invalid username or password.');
   }
 
-  // Returns a fresh JWT so the frontend can authenticate later requests.
+  // Ensure password exists in DB
+  if (!user.password) {
+    throw new HttpError(401, 'Invalid username or password.');
+  }
+
+  // Compare bcrypt password safely
+  const isMatch = bcrypt.compareSync(password, user.password);
+
+  if (!isMatch) {
+    throw new HttpError(401, 'Invalid username or password.');
+  }
+
+  // Success response
   res.json(buildAuthResponse(user));
 }
-
 // Exports handlers so the auth route file can attach them to endpoints.
 module.exports = {
   login,

@@ -43,8 +43,13 @@ async function createUser({ username, passwordHash, role = 'user' }) {
 // Reads a single user by username, including the password hash for login validation.
 async function findUserByUsername(username) {
   const db = await getDb();
-  // Database read: used by both registration duplicate checks and login.
-  return db.get(`${privateUserSelect} WHERE username = ?`, username);
+
+  const result = await db.get(
+    `${privateUserSelect} WHERE username = ?`,
+    username
+  );
+
+  return result || null;
 }
 
 // Reads a user by numeric id and returns the public fields used in API responses.
