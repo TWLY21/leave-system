@@ -451,3 +451,8 @@ This project is a strong portfolio example because it demonstrates:
 - reusable component design and improved dashboard UX
 - Playwright API and E2E automation
 - CI workflow setup and production-oriented configuration
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
