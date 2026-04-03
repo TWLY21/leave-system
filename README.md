@@ -1,4 +1,5 @@
 # Leave Management System
+<img width="1277" height="673" alt="image" src="https://github.com/user-attachments/assets/a02ccb19-f263-432b-ab0f-f836efb7effd" />
 
 A production-oriented fullstack leave management system built with Express, Vue 3, PostgreSQL, SQLite, Playwright, and GitHub Actions.
 
