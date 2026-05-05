@@ -43,7 +43,8 @@ async function submit() {
     notifySuccess(`Welcome back, ${data.user.username}.`, 'Sign-in successful');
     router.push({ name: 'dashboard' });
   } catch (error) {
-    errorMessage.value = error.response?.data?.message || 'Login failed.';
+    errorMessage.value = error.response?.data?.message
+      || (error.request ? 'Cannot reach the backend API. Check that the backend is running and the frontend API URL is correct.' : 'Login failed.');
     notifyError(errorMessage.value, 'Unable to sign in');
   } finally {
     loading.value = false;

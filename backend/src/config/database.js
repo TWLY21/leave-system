@@ -145,17 +145,33 @@ async function ensurePostgresLeaveRangeSchema(db) {
 }
 
 async function seedAdminUser(db) {
-  const existingAdmin = await db.get('SELECT id FROM users WHERE username = ?', env.adminUsername);
+  const existingAdmin = await db.get(
+    'SELECT id, password, role FROM users WHERE username = ?',
+    env.adminUsername
+  );
+  const passwordHash = bcrypt.hashSync(env.adminPassword, 10);
 
   if (!existingAdmin) {
-    // Hashes the configured admin password before storing it in the users table.
-    const passwordHash = bcrypt.hashSync(env.adminPassword, 10);
     // Inserts the initial admin account used to approve or reject leave requests.
     await db.run(
       'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
       env.adminUsername,
       passwordHash,
       'admin'
+    );
+    return;
+  }
+
+  // Keeps the seeded admin credentials consistent with current env settings.
+  const passwordMatches = bcrypt.compareSync(env.adminPassword, existingAdmin.password);
+  const roleMatches = existingAdmin.role === 'admin';
+
+  if (!passwordMatches || !roleMatches) {
+    await db.run(
+      'UPDATE users SET password = ?, role = ? WHERE id = ?',
+      passwordHash,
+      'admin',
+      existingAdmin.id
     );
   }
 }
