@@ -293,6 +293,12 @@ ADMIN_PASSWORD=Admin123!
 copy frontend\.env.example frontend\.env
 ```
 
+For local development, make sure the frontend points to the local backend:
+
+```env
+VITE_API_URL=http://127.0.0.1:4000/api
+```
+
 ### Run the backend
 
 ```bash
@@ -319,6 +325,8 @@ Frontend URL:
 
 - Username: `admin`
 - Password: `Admin123!`
+
+The backend seeds this account on startup. If the admin already exists, startup also keeps its role and password hash aligned with `ADMIN_USERNAME` and `ADMIN_PASSWORD` from `backend/.env`.
 
 ## Useful Commands
 
